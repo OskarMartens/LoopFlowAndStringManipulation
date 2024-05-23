@@ -1,29 +1,39 @@
 ﻿using LoopFlowAndStringManipulation.CinemaApplication;
+using LoopFlowAndStringManipulation.RepeatTenTimes;
 using System.Text.RegularExpressions;
 
-namespace LoopFlowAndStringManipulation {
-    internal class Program {
+namespace LoopFlowAndStringManipulation
+{
+    static class Program
+    {
 
-        static void Main(string[] args) {
+        static void Main(string[] args)
+        {
             //MainApplication();
-            CinemaMainMenu();
+            //CinemaMainMenu();
             //IndividualTicketPriceMenu();
             //GroupCinemaMenu();
+            RepeatApplication.App();
         }
 
-        static void MainApplication() {
+        public static void MainApplication()
+        {
             string userInput;
             bool isRunning = true;
-            do {
+            do
+            {
                 MainMenuText();
                 userInput = Console.ReadLine()!;
                 bool runMenu = true;
-                while (runMenu) {
-                    switch (userInput) {
+                while (runMenu)
+                {
+                    switch (userInput)
+                    {
                         case "1":
                             CinemaMainMenu();
                             break;
                         case "2":
+                            RepeatApplication.App();
                             break;
                         case "3":
                             break;
@@ -39,13 +49,16 @@ namespace LoopFlowAndStringManipulation {
             } while (isRunning);
         }
 
-        static void CinemaMainMenu() {
+        static void CinemaMainMenu()
+        {
             string userInput;
             bool isRunning = true;
-            do {
+            do
+            {
                 CinemaMainMenuText();
                 userInput = Console.ReadLine()!;
-                switch (userInput) {
+                switch (userInput)
+                {
                     case "1":
                         IndividualTicketPriceMenu();
                         break;
@@ -56,7 +69,8 @@ namespace LoopFlowAndStringManipulation {
             } while (isRunning);
         }
 
-        static void IndividualTicketPriceMenu() {
+        static void IndividualTicketPriceMenu()
+        {
             IndividualTicketPriceMenuText();
             string userInput = Console.ReadLine()!;
 
@@ -67,7 +81,8 @@ namespace LoopFlowAndStringManipulation {
 
             bool isNumber = Regex.IsMatch(userInput, @"^\d+$");
 
-            while (!isNumber) {
+            while (!isNumber)
+            {
                 userInput = NonValidInput();
                 isNumber = Regex.IsMatch(userInput, @"^\d+$");
             }
@@ -81,7 +96,8 @@ namespace LoopFlowAndStringManipulation {
             userInput = Console.ReadLine()!;
 
             bool runMenu = true;
-            while (runMenu) {
+            while (runMenu)
+            {
                 if (userInput.Equals("1"))
                     IndividualTicketPriceMenu();
                 else if (userInput.Equals("2"))
@@ -93,14 +109,12 @@ namespace LoopFlowAndStringManipulation {
             }
         }
         
-        static void GroupCinemaMenu() {
+        static void GroupCinemaMenu()
+        {
             GroupCinemaMenuText();
 
             int groupCost = 0;
             List<int> groupAges = new List<int>();
-
-            //string userInput = Console.ReadLine()!;
-            //bool isNumber = Regex.IsMatch(userInput, @"^\d+$");
 
             bool runMenu = true;
             while (runMenu)
@@ -154,14 +168,15 @@ namespace LoopFlowAndStringManipulation {
             }
         }
 
-        static string GetAgeInformation(int age) {
+        static string GetAgeInformation(int age)
+        {
             bool child = age < 5;
             bool youth = age < 20 && age >= 5;
             bool senior = age >= 65 && age <= 100;
             bool oldSenior = age > 100;
 
             if (child)
-                return "For children under the age of 5, the price is: ";
+                return "For children under the age of 5, the price is:";
             else if (youth)
                 return "For youth five years or older and younger than 20, the price is:";
             else if (senior)
@@ -172,7 +187,8 @@ namespace LoopFlowAndStringManipulation {
                 return "For regular adults age 20 to 64, the price is:";
         }
 
-        static int CalculateTicketPrice(int age) {
+        static int CalculateTicketPrice(int age)
+        {
             bool child = age < 5;
             bool youth = age < 20 && age >= 5;
             bool senior = age >= 65 && age <= 100;
@@ -188,7 +204,8 @@ namespace LoopFlowAndStringManipulation {
                 return 120;
         }
 
-        private static void IndividualTicketPriceEndText(string customerInfo, int ticketPrice) {
+        private static void IndividualTicketPriceEndText(string customerInfo, int ticketPrice)
+        {
             Console.WriteLine($"{customerInfo} {ticketPrice} SEK.");
             Console.WriteLine("");
             Console.WriteLine("Would you like to enter a new age, go back to the cinema menu or go to the main menu?");
@@ -197,7 +214,8 @@ namespace LoopFlowAndStringManipulation {
             Console.WriteLine("3. Go back to main menu");
         }
 
-        static void GroupCinemaMenuText() {
+        static void GroupCinemaMenuText()
+        {
             Console.Clear();
             Console.WriteLine("You have come to the GroupCinemaMenu");
             Console.WriteLine("Enter the ages of the group members.");
@@ -206,7 +224,8 @@ namespace LoopFlowAndStringManipulation {
         }
 
 
-        static void IndividualTicketPriceMenuText() {
+        static void IndividualTicketPriceMenuText()
+        {
             Console.Clear();
             Console.WriteLine("*************************");
             Console.WriteLine("You have selected individual ticket price");
@@ -215,7 +234,8 @@ namespace LoopFlowAndStringManipulation {
             Console.WriteLine("Otherwise please enter the age of the customer:");
         }
 
-        static void MainMenuText() {
+        static void MainMenuText()
+        {
             Console.Clear();
             Console.WriteLine("*************************");
             Console.WriteLine("Welcome to the main menu.");
@@ -234,7 +254,8 @@ namespace LoopFlowAndStringManipulation {
             Console.WriteLine("Please make your choice between 1, 2, 3 or 0.");
         }
 
-        static void CinemaMainMenuText() {
+        static void CinemaMainMenuText()
+        {
             Console.Clear();
             Console.WriteLine("");
             Console.WriteLine("*************************");
@@ -248,7 +269,8 @@ namespace LoopFlowAndStringManipulation {
             Console.WriteLine("--------------------------------------------");
             Console.WriteLine("Please make your choice:");
         }
-        static string NonValidInput() {
+        public static string NonValidInput()
+        {
             Console.WriteLine("The provided input is not valid.");
             Console.WriteLine("Please enter a valid input:");
             return Console.ReadLine()!;
