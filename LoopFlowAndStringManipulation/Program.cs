@@ -1,19 +1,34 @@
 ﻿using LoopFlowAndStringManipulation.CinemaApplication;
 using LoopFlowAndStringManipulation.RepeatTenTimes;
-using System.Text.RegularExpressions;
-
+using LoopFlowAndStringManipulation.ThirdWord;
+/*
+ * 
+ * Kul uppgift men den var lite klurig! Det svåra var att bryta ut programmet till separata klasser och metoder.
+ * 
+ * Det var också svårt med looparna som körde menyerna.
+ * Jag hade ett problem med menyer från andra program som stannade kvar.
+ * Jag löste detta med tydligen bryta alla loopar när ett val gjordes.
+ * 
+ * I genom alla applikationer har jag försökt lägga texterna som en egen metod längst ner i klasserna.
+ * 
+ * Mitt genomgående tankesätt är att alltid försöka "fail fast".
+ * Dvs bland det första koden kollar är om input inte är giltig. Först efter det skapar jag variabler och gör andra operationer.
+ * 
+ * Det jag skulle vilja lära mig är att skriva bra och "clean" kod samt hur den kan refaktoreras.
+ * 
+ * Det jag undrar över är också om användandet av statiska klassar i dessa projekt är bra eller ska jag skapa objekt istället?
+ * 
+ * Jag försöker också skriva självdokumenterande kod.
+ * 
+ * */
 namespace LoopFlowAndStringManipulation
 {
-    static class Program
+    public static class Program
     {
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            //MainApplication();
-            //CinemaMainMenu();
-            //IndividualTicketPriceMenu();
-            //GroupCinemaMenu();
-            RepeatApplication.App();
+            MainApplication();
         }
 
         public static void MainApplication()
@@ -30,12 +45,19 @@ namespace LoopFlowAndStringManipulation
                     switch (userInput)
                     {
                         case "1":
-                            CinemaMainMenu();
+                            runMenu = false;
+                            isRunning = false;
+                            CinemaApp.CinemaMainMenu();
                             break;
                         case "2":
+                            runMenu = false;
+                            isRunning = false;
                             RepeatApplication.App();
                             break;
                         case "3":
+                            runMenu = false;
+                            isRunning = false;
+                            ThirdWordApp.App();
                             break;
                         case "0":
                             runMenu = false;
@@ -49,190 +71,6 @@ namespace LoopFlowAndStringManipulation
             } while (isRunning);
         }
 
-        static void CinemaMainMenu()
-        {
-            string userInput;
-            bool isRunning = true;
-            do
-            {
-                CinemaMainMenuText();
-                userInput = Console.ReadLine()!;
-                switch (userInput)
-                {
-                    case "1":
-                        IndividualTicketPriceMenu();
-                        break;
-                    case "2":
-                        GroupCinemaMenu();
-                        break;
-                }
-            } while (isRunning);
-        }
-
-        static void IndividualTicketPriceMenu()
-        {
-            IndividualTicketPriceMenuText();
-            string userInput = Console.ReadLine()!;
-
-            if (userInput.ToUpper().Equals("B"))
-                CinemaMainMenu();
-            else if (userInput.ToUpper().Equals("M"))
-                MainApplication();
-
-            bool isNumber = Regex.IsMatch(userInput, @"^\d+$");
-
-            while (!isNumber)
-            {
-                userInput = NonValidInput();
-                isNumber = Regex.IsMatch(userInput, @"^\d+$");
-            }
-
-            int customerAge = int.Parse(userInput);
-
-            string customerInfo = GetAgeInformation(customerAge);
-            int ticketPrice = CalculateTicketPrice(customerAge);
-
-            IndividualTicketPriceEndText(customerInfo, ticketPrice);
-            userInput = Console.ReadLine()!;
-
-            bool runMenu = true;
-            while (runMenu)
-            {
-                if (userInput.Equals("1"))
-                    IndividualTicketPriceMenu();
-                else if (userInput.Equals("2"))
-                    CinemaMainMenu();
-                else if (userInput.Equals("3"))
-                    MainApplication();
-                else
-                    userInput = NonValidInput();
-            }
-        }
-        
-        static void GroupCinemaMenu()
-        {
-            GroupCinemaMenuText();
-
-            int groupCost = 0;
-            List<int> groupAges = new List<int>();
-
-            bool runMenu = true;
-            while (runMenu)
-            {
-                string userInput = Console.ReadLine()!;
-                bool isNumber = Regex.IsMatch(userInput, @"^\d+$");
-
-                if (userInput.ToUpper().Equals("C"))
-                {
-                    if (!groupAges.Any())
-                    {
-                        Console.WriteLine("There are no members in this group.");
-                        Console.WriteLine("Press any key to continue.");
-                        Console.ReadLine();
-                        GroupCinemaMenu();
-                    }
-                    else
-                    {
-                        Console.WriteLine("The members' ages are:");
-                        foreach (int age in groupAges)
-                        {
-                            Console.WriteLine(age);
-                        }
-                        Console.WriteLine("The total cost for the group is: ");
-                        Console.WriteLine(groupCost);
-                        Console.WriteLine("Press any key to go back.");
-                        Console.ReadLine();
-                        groupAges.Clear();
-                        groupCost = 0;
-                        GroupCinemaMenu();
-                    }
-                }
-                else if (userInput.ToUpper().Equals("B"))
-                {
-                    runMenu = false;
-                    CinemaMainMenu();
-                } 
-                else if (userInput.ToUpper().Equals("M"))
-                {
-                    runMenu = false;
-                    MainApplication();
-                }
-                else if(isNumber)
-                {
-                    int customerAge = int.Parse(userInput);
-                    groupCost += CalculateTicketPrice(customerAge);
-                    groupAges.Add(customerAge);
-                }
-                else
-                    userInput = NonValidInput();
-            }
-        }
-
-        static string GetAgeInformation(int age)
-        {
-            bool child = age < 5;
-            bool youth = age < 20 && age >= 5;
-            bool senior = age >= 65 && age <= 100;
-            bool oldSenior = age > 100;
-
-            if (child)
-                return "For children under the age of 5, the price is:";
-            else if (youth)
-                return "For youth five years or older and younger than 20, the price is:";
-            else if (senior)
-                return "For seniors 65 years or older and younger than 100, the price is:";
-            else if (oldSenior)
-                return "For people over the age of 100 the price is:";
-            else
-                return "For regular adults age 20 to 64, the price is:";
-        }
-
-        static int CalculateTicketPrice(int age)
-        {
-            bool child = age < 5;
-            bool youth = age < 20 && age >= 5;
-            bool senior = age >= 65 && age <= 100;
-            bool oldSenior = age > 100;
-
-            if (child || oldSenior)
-                return 0;
-            else if (youth)
-                return 80;
-            else if (senior)
-                return 90;
-            else
-                return 120;
-        }
-
-        private static void IndividualTicketPriceEndText(string customerInfo, int ticketPrice)
-        {
-            Console.WriteLine($"{customerInfo} {ticketPrice} SEK.");
-            Console.WriteLine("");
-            Console.WriteLine("Would you like to enter a new age, go back to the cinema menu or go to the main menu?");
-            Console.WriteLine("1. New age.");
-            Console.WriteLine("2. Go back to the cinema menu");
-            Console.WriteLine("3. Go back to main menu");
-        }
-
-        static void GroupCinemaMenuText()
-        {
-            Console.Clear();
-            Console.WriteLine("You have come to the GroupCinemaMenu");
-            Console.WriteLine("Enter the ages of the group members.");
-            Console.WriteLine("Enter 'C' to calculate the price and see the group members' ages");
-            Console.WriteLine("Enter 'B' to go back to the cinema menu and 'M' to go to the main menu");
-        }
-
-
-        static void IndividualTicketPriceMenuText()
-        {
-            Console.Clear();
-            Console.WriteLine("*************************");
-            Console.WriteLine("You have selected individual ticket price");
-            Console.WriteLine("In order to go back to the main menu enter 'M'");
-            Console.WriteLine("In order to go back to the cinema menu enter 'B'");
-            Console.WriteLine("Otherwise please enter the age of the customer:");
-        }
 
         static void MainMenuText()
         {
@@ -253,22 +91,7 @@ namespace LoopFlowAndStringManipulation
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine("Please make your choice between 1, 2, 3 or 0.");
         }
-
-        static void CinemaMainMenuText()
-        {
-            Console.Clear();
-            Console.WriteLine("");
-            Console.WriteLine("*************************");
-            Console.WriteLine("You have selected the Cinema application.");
-            Console.WriteLine("In this application you can check the ticket price depending on age.");
-            Console.WriteLine("You can also check the total sum for a party of customers.");
-            Console.WriteLine("Here is the list with corresponding numbers:");
-            Console.WriteLine("--------------------------------------------");
-            Console.WriteLine("1. Individual ticket price.");
-            Console.WriteLine("2. Total price for a party.");
-            Console.WriteLine("--------------------------------------------");
-            Console.WriteLine("Please make your choice:");
-        }
+        // Den metoden används vid flera tillfällen i applikationen.
         public static string NonValidInput()
         {
             Console.WriteLine("The provided input is not valid.");
@@ -277,4 +100,3 @@ namespace LoopFlowAndStringManipulation
         }
     }
 }
-
