@@ -48,29 +48,35 @@ namespace LoopFlowAndStringManipulation.ThirdWord
                     {
                         Console.WriteLine($"The third word is: {wordList[2]}");
                         // Här behövde jag en ytterligare loop för att hantera hur användaren vill avsluta programmet.
-                        bool runMenu = true;
-                        while (runMenu)
-                        {
-                            MenuTextEnd();
-                            userInput = Console.ReadLine()!;
-                            if (userInput.Equals("1"))
-                            {
-                                runMenu = false;
-                                runApp = false;
-                                App();
-                            }
-                            else if (userInput.Equals("2"))
-                            {
-                                runMenu = false;
-                                runApp = false;
-                                Program.MainApplication();
-                            }
-                            else
-                            {
-                                Console.WriteLine("The input is not valid. Please enter a valid input");
-                            }
-                        }
+
+                        DisplayFinalMenu(ref userInput, ref runApp);
                     }
+                }
+            }
+        }
+
+        private static void DisplayFinalMenu(ref string userInput, ref bool runApp)
+        {
+            bool runMenu = true;
+            while (runMenu)
+            {
+                MenuTextEnd();
+                userInput = Console.ReadLine()!;
+                if (userInput.Equals("1"))
+                {
+                    runMenu = false;
+                    runApp = false;
+                    App();
+                }
+                else if (userInput.Equals("2"))
+                {
+                    runMenu = false;
+                    runApp = false;
+                    Program.MainApplication();
+                }
+                else
+                {
+                    Console.WriteLine("The input is not valid. Please enter a valid input");
                 }
             }
         }
